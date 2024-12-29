@@ -1,0 +1,177 @@
+syntax = "proto3";
+
+package reddit;
+
+option go_package = "internal/generated;redditpb";
+
+// Define the RedditService
+service RedditService {
+  // User-related RPCs
+  rpc RegisterUser(RegisterRequest) returns (RegisterResponse);
+
+  // Subreddit-related RPCs
+  rpc CreateSubreddit(CreateSubredditRequest) returns (CreateSubredditResponse);
+  rpc JoinSubreddit(JoinSubredditRequest) returns (JoinSubredditResponse);
+
+  // Post-related RPCs
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+  rpc Repost(RepostRequest) returns (RepostResponse);
+
+  // Comment-related RPCs
+  rpc AddComment(CommentRequest) returns (CommentResponse);
+
+  // Voting RPCs
+  rpc UpvotePost(UpvoteRequest) returns (UpvoteResponse);
+  rpc DownvotePost(DownvoteRequest) returns (DownvoteResponse);
+
+  // Feed RPCs
+  rpc FetchFeed(FetchFeedRequest) returns (FetchFeedResponse);
+
+  // Direct Messaging RPC
+  rpc SendDirectMessage(DirectMessageRequest) returns (DirectMessageResponse);
+  rpc GetDirectMessages(GetDirectMessagesRequest) returns (GetDirectMessagesResponse);
+
+  // User profile-related RPCs
+  rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
+}
+
+// Messages for user registration
+message RegisterRequest {
+  string username = 1;
+}
+
+message RegisterResponse {
+  string message = 1;
+}
+
+// Messages for subreddit creation and joining
+message CreateSubredditRequest {
+  string name = 1;
+  string description = 2;
+}
+
+message CreateSubredditResponse {
+  string message = 1;
+}
+
+message JoinSubredditRequest {
+  string username = 1;
+  string subreddit = 2;
+}
+
+message JoinSubredditResponse {
+  string message = 1;
+}
+
+// Messages for creating and reposting posts
+message CreatePostRequest {
+  string username = 1;
+  string subreddit = 2;
+  string title = 3;
+  string content = 4;
+}
+
+message CreatePostResponse {
+  string post_id = 1;
+}
+
+message RepostRequest {
+  string username = 1;
+  string post_id = 2;
+  string target_subreddit = 3;
+}
+
+message RepostResponse {
+  string message = 1;
+}
+
+// Messages for adding comments
+message CommentRequest {
+  string username = 1;
+  string post_id = 2;
+  string content = 3;
+  string parent_comment_id = 4; // Optional for replying to a specific comment
+}
+
+message CommentResponse {
+  string comment_id = 1;
+}
+
+// Messages for voting
+message UpvoteRequest {
+  string username = 1;
+  string post_id = 2;
+}
+
+message UpvoteResponse {
+  string message = 1;
+}
+
+message DownvoteRequest {
+  string username = 1;
+  string post_id = 2;
+}
+
+message DownvoteResponse {
+  string message = 1;
+}
+
+// Messages for fetching the feed
+message FetchFeedRequest {
+  string username = 1;
+  string sort_by = 2;
+}
+
+message FetchFeedResponse {
+  repeated Post posts = 1;
+}
+
+// Messages for direct messaging
+message DirectMessageRequest {
+  string from = 1;
+  string to = 2;
+  string content = 3;
+}
+
+message DirectMessageResponse {
+  string message = 1;
+}
+
+message GetDirectMessagesRequest {
+  string username = 1;
+}
+
+message GetDirectMessagesResponse {
+  repeated DirectMessage messages = 1;
+}
+
+// Messages for user profiles
+message GetUserProfileRequest {
+  string username = 1;
+}
+
+message GetUserProfileResponse {
+  string username = 1;
+  int32 karma = 2;
+  repeated string subreddits = 3;
+}
+
+// Shared message structure for posts
+message Post {
+  string id = 1;
+  string author = 2;
+  string title = 3;
+  string content = 4;
+  int32 upvotes = 5;
+  int32 downvotes = 6;
+  string subreddit = 7;
+  string created_at = 8;
+}
+
+// Shared message structure for direct messages
+message DirectMessage {
+  string from = 1;
+  string to = 2;
+  string content = 3;
+  string created_at = 4;
+}
